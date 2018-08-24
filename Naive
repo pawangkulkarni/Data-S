@@ -1,0 +1,72 @@
+library(caret)
+install.packages("e1071")
+require(e1071)
+install.packages("stringr")
+library(stringr)
+library(caret)
+
+
+sms             <- read.csv("C:\\Udemy\\Pro Data Science in Python\\SMS spam\\spam.csv",head=T)
+sms["v2"]       <- toupper(sms$v2)
+spam            <- sms["v1"]
+
+
+sms["FREE"]     <- str_count(sms$v2,"FREE")
+sms["SMS"]      <- str_count(sms$v2,"SMS")
+sms["PRIVATE"]  <- str_count(sms$v2,"PRIVATE")
+sms["HTTP"]     <- str_count(sms$v2,"HTTP")
+sms["URGENT"]   <- str_count(sms$v2,"URGENT")
+sms["CALL"]     <- str_count(sms$v2,"CALL")
+sms["WON"]      <- str_count(sms$v2,"WON")
+sms["SEXY"]     <- str_count(sms$v2,"SEXY")
+sms["CUSTOMER"] <- str_count(sms$v2,"CUSTOMER")
+sms["DEAR"]     <- str_count(sms$v2,"DEAR")
+sms["DATING"]   <- str_count(sms$v2,"DATING")
+sms["MEET"]     <- str_count(sms$v2,"MEET")
+sms["_symb1"]   <- str_count(sms$v2,"!")
+sms["MOBILE"]   <- str_count(sms$v2,"MOBILE")
+sms["PRIZE"]    <- str_count(sms$v2,"PRIZE")
+sms["WANT"]     <- str_count(sms$v2,"WANT")
+sms["PRICE"]    <- str_count(sms$v2,"PRICE")
+sms["REPLY"]    <- str_count(sms$v2,"REPLY")
+sms["VOUCHER"]  <- str_count(sms$v2,"VOUCHER")
+sms["CONGRATULATIONS"]    <- str_count(sms$v2,"CONGRATULATIONS")
+sms["PROMOTION"]          <- str_count(sms$v2,"PROMOTION")
+sms["SHOPPING"]           <- str_count(sms$v2,"SHOPPING")
+sms["CONTACT"]            <- str_count(sms$v2,"CONTACT")
+sms["MSG"]                <- str_count(sms$v2,"MSG")
+
+
+
+
+inTrain    <- createDataPartition(y=sms$v1,p = .75,list = FALSE)
+sms              <- sms[-2]
+
+data_train <- sms[inTrain ,]
+data_test  <- sms[-inTrain ,]
+
+
+
+
+
+#unluckily this cannot be done anymore, as the underlying package has been removed
+#sms              <- sms[-1]
+#sms              <- sms[-1]
+#ctrl             <- trainControl(method = "repeatedcv",repeats = 3)
+#plsFit           <- train(y = spam, x  = sms , trControl = ctrl, method="nbDiscrete")
+
+
+
+
+library(e1071)
+model       <- naiveBayes(v1  ~ ., data = data_train)
+preds       <- predict(model, newdata = data_train)
+conf_matrix <- table(preds, data_train$v1)
+
+
+preds       <- predict(model, newdata = data_test)
+conf_matrix <- table(preds, data_test$v1)
+
+
+
+
