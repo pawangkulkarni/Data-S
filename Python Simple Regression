@@ -1,0 +1,45 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Oct 12 13:24:14 2018
+
+@author: PAVANKULKARNI
+"""
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+Salary = pd.read_csv('Salary_Data.csv')
+
+# split the file into Test & Train
+
+X = Salary.iloc[:,0:1]
+Y = Salary.iloc[:,1]
+
+from sklearn.cross_validation import train_test_split
+Xtrain, Xtest, Ytrain, Ytest  = train_test_split(X,Y,test_size=0.2,random_state=0)
+
+
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(Xtrain,Ytrain)    
+
+#predicting Linear 
+Y_pred = regressor.predict(Xtest)
+
+
+# Plot
+plt.scatter(Xtrain,Ytrain, color='red')
+plt.plot(Xtrain, regressor.predict(Xtrain), color = 'blue')
+plt.title('Salary V/S Exp(Training set)')
+plt.xlabel('Years of Exp')
+plt.ylabel=('salary')
+plt.show()
+
+
+plt.scatter(Xtest,Ytest,color = 'red')
+plt.plot(Xtest,regressor.predict(Xtest), color = 'blue')
+plt.titles('Exp V/S Salary (Test)')
+plt.xlabel=('Yrs of Exp')
+plt.ylabel=('Sal')
+plt.show()
